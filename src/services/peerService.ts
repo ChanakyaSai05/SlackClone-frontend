@@ -26,8 +26,8 @@ class PeerService {
       console.log("Initializing peer with ID:", this.peerId);
 
       this.peer = new Peer(this.peerId, {
-        host: window.location.hostname,
-        port: 3000,
+        host: import.meta.env.NODE_ENV === "production" ? "peerjs-server.herokuapp.com" : window.location.hostname,
+        port: import.meta.env.NODE_ENV === "production" ? 443 : 3000,
         path: "/peerjs/myapp",
         debug: 3,
         config: {

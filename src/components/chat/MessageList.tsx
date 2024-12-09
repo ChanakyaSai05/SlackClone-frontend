@@ -86,20 +86,20 @@ export const MessageList = () => {
 //               <div key={index} className="inline-block">
 //                 {attachment.type === 'image' ? (
 //                   <a
-//                     href={attachment.url}
+//                     href={`${process.env.VITE_API_URL}/${attachment.url}`}
 //                     target="_blank"
 //                     rel="noopener noreferrer"
 //                     className="block max-w-xs"
 //                   >
 //                     <img
-//                       src={attachment.url}
+//                       src={`${process.env.VITE_API_URL}/${attachment.url}`}
 //                       alt={attachment.name || 'Attached image'}
 //                       className="max-w-full rounded-lg shadow-sm hover:shadow-md transition-shadow"
 //                     />
 //                   </a>
 //                 ) : (
 //                   <a
-//                     href={attachment.url}
+//                     href={`${process.env.VITE_API_URL}/${attachment.url}`}
 //                     target="_blank"
 //                     rel="noopener noreferrer"
 //                     className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
@@ -155,20 +155,20 @@ const Message = ({ message }: { message: MessageType }) => {
               <div key={index} className="inline-block">
                 {attachment.type === 'image' ? (
                   <a
-                    href={attachment.url}
+                    href={`${import.meta.env.VITE_API_URL}/${attachment.url}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block max-w-xs"
                   >
                     <img
-                      src={attachment.url}
+                      src={`${import.meta.env.VITE_API_URL}/${attachment.url}`}
                       alt={attachment.name || 'Attached image'}
                       className="max-w-full rounded-lg shadow-sm hover:shadow-md transition-shadow"
                     />
                   </a>
                 ) : (
                   <a
-                    href={attachment.url}
+                    href={`${import.meta.env.VITE_API_URL}/${attachment.url}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
