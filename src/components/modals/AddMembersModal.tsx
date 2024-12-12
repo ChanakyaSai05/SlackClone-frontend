@@ -1,24 +1,29 @@
-import React from 'react';
-import { X } from 'lucide-react';
-import { useUserStore } from '../../store/userStore';
-import { useChannelStore } from '../../store/channelStore';
-import { useAuthStore } from '../../store/authStore';
-import { api } from '../../services/api';
+import React from "react";
+import { X } from "lucide-react";
+import { useUserStore } from "../../store/userStore";
+import { useChannelStore } from "../../store/channelStore";
+import { useAuthStore } from "../../store/authStore";
+import { api } from "../../services/api";
+import { Channel } from "../../types";
 
 interface AddMembersModalProps {
+  channel: Channel | null | undefined;
   channelId: string;
   onClose: () => void;
 }
 
-export const AddMembersModal = ({ channelId, onClose }: AddMembersModalProps) => {
+export const AddMembersModal = ({
+  channel,
+  channelId,
+  onClose,
+}: AddMembersModalProps) => {
   const { users } = useUserStore();
   const { user } = useAuthStore();
   const { channels, fetchChannels } = useChannelStore();
-  
-  const currentChannel = channels.find(c => c._id === channelId);
-  const nonMembers = users.filter(u => 
-    u._id !== user?._id && 
-    !currentChannel?.members.includes(u._id)
+
+  const currentChannel = channels.find((c) => c._id === channelId);
+  const nonMembers = users.filter(
+    (u) => u._id !== user?._id && !currentChannel?.members.includes(u._id)
   );
 
   const handleAddMember = async (userId: string) => {
@@ -26,7 +31,7 @@ export const AddMembersModal = ({ channelId, onClose }: AddMembersModalProps) =>
       await api.post(`/api/channels/${channelId}/members`, { userId });
       await fetchChannels();
     } catch (error) {
-      console.error('Error adding member:', error);
+      console.error("Error adding member:", error);
     }
   };
 
@@ -43,8 +48,8 @@ export const AddMembersModal = ({ channelId, onClose }: AddMembersModalProps) =>
           </button>
         </div>
 
-        <div className="space-y-2">
-          {nonMembers.map((user) => (
+        {/* <div className="space-y-2">
+          {channel?.members?.map((user) => (
             <div
               key={user._id}
               className="flex items-center justify-between p-2 hover:bg-gray-50 rounded"
@@ -62,6 +67,33 @@ export const AddMembersModal = ({ channelId, onClose }: AddMembersModalProps) =>
                 Add
               </button>
             </div>
+          ))}
+        </div> */}
+        <div className="space-y-2 max-h-48 overflow-y-auto border rounded-md p-2">
+          {channel?.members?.map((everyUser, index) => (
+            <React.Fragment key={everyUser._id}>
+              <div className="flex justify-between items-center space-x-2 p-2 hover:bg-gray-50 rounded">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                    {/* {everyUser.name[0].toUpperCase()} */}
+                    <img
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        everyUser?.name || ""
+                      )}`}
+                      alt={everyUser?.name}
+                      className="w-7 h-7 rounded-full"
+                    />
+                  </div>
+                  <span className="ml-2">{everyUser.name}</span>
+                </div>
+                {everyUser.status === "online" && (
+                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                )}
+              </div>
+              {index < channel.members.length - 1 && (
+                <hr className="border-t border-gray-200" />
+              )}
+            </React.Fragment>
           ))}
         </div>
       </div>

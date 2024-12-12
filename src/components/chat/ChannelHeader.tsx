@@ -8,6 +8,7 @@ import { AddMembersModal } from "../modals/AddMembersModal";
 import { CallModal } from "../calls/CallModal";
 import { socket } from "../../services/socket";
 import { peerService } from "../../services/peerService";
+import { ChannelSettingsModal } from "../modals/ChannelSettingsModal";
 
 export const ChannelHeader = () => {
   const { activeChannelId, channels } = useChannelStore();
@@ -27,6 +28,7 @@ export const ChannelHeader = () => {
   const channelName = isDirectMessage
     ? otherUser?.name
     : channels.find((c) => c._id === activeChannelId)?.name;
+  const activeChannel = channels.find((c) => c._id === activeChannelId);
 
   useEffect(() => {
     const handleIncomingCall = (event: any) => {
@@ -59,12 +61,14 @@ export const ChannelHeader = () => {
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       devices.forEach((device) => {
         if (device.kind === "videoinput") {
-          navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-            stream.getTracks().forEach((track) => track.stop());
-          });
+          navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then((stream) => {
+              stream.getTracks().forEach((track) => track.stop());
+            });
         }
       });
-    } );
+    });
   };
   useEffect(() => {
     if (!user?._id) return;
@@ -104,13 +108,13 @@ export const ChannelHeader = () => {
             >
               <Users size={20} />
             </button>
-            <button
+            {/* <button
               onClick={() => setShowInviteModal(true)}
               className="p-2 hover:bg-gray-100 rounded-full"
               title="Invite via Email"
             >
               <Users size={20} />
-            </button>
+            </button> */}
           </>
         )}
 
@@ -148,9 +152,16 @@ export const ChannelHeader = () => {
           onClose={() => setShowInviteModal(false)}
         />
       )}
+      {showSettings && (
+        <ChannelSettingsModal
+          channel={activeChannel}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
 
       {showAddMembersModal && activeChannelId && !isDirectMessage && (
         <AddMembersModal
+          channel={activeChannel}
           channelId={activeChannelId}
           onClose={() => setShowAddMembersModal(false)}
         />

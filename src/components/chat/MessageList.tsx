@@ -35,7 +35,7 @@ export const MessageList = () => {
       };
     }
   }, [activeChannelId, fetchMessages, addMessage]);
-  console.log(user,"user",messages,"messages");
+  // console.log(user,"user",messages,"messages");
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView();

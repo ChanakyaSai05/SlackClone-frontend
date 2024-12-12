@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Channel } from '../types';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
@@ -18,7 +19,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401|| error.response?.status === 403) {
+      localStorage.removeItem('auth-storage');
       localStorage.removeItem('token');
       window.location.reload();
     }
@@ -43,6 +45,7 @@ export const auth = {
     return response.data;
   },
   logout: async () => {
+    localStorage.removeItem('auth-storage');
     localStorage.removeItem('token');
     return true;
   }
@@ -59,6 +62,18 @@ export const channels = {
   },
   addMember: async (channelId: string, userId: string) => {
     const response = await api.post(`/api/channels/${channelId}/members`, { userId });
+    return response.data;
+  },
+  removeMember: async (channelId: string, userId: string) => {
+    const response = await api.delete(`/api/channels/${channelId}/members/${userId}`);
+    return response.data;
+  },
+  updateChannel: async (channelId: string, updates: Partial<Channel>) => {
+    const response = await api.patch(`/api/channels/${channelId}`, updates);
+    return response.data;
+  },
+  deleteChannel: async (channelId: string) => {
+    const response = await api.delete(`/api/channels/${channelId}`);
     return response.data;
   }
 };
