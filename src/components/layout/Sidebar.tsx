@@ -82,7 +82,7 @@ export const Sidebar = () => {
   return (
     <div className="w-64 bg-gray-800 h-screen flex flex-col">
       <div className="p-4 border-b border-gray-700">
-        <h1 className="text-white text-xl font-bold">TeamPlanner</h1>
+        <h1 className="text-white text-xl font-bold">TaskPlanner</h1>
         <div className="flex items-center mt-4">
           <div className="w-7 h-7 rounded-full bg-gray-300 flex items-center justify-center text-gray-700 font-bold">
             {/* {user?.name[0].toUpperCase()} */}
